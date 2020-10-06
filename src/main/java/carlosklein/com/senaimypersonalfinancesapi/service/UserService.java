@@ -16,10 +16,11 @@ public class UserService {
 	private UserRepository repository;
 	
 	public User saveUser(User user) {
+		validate(user);
 		boolean verifyEmail = repository.existsByEmail(user.getEmail());
 		
 		if(verifyEmail) {
-			throw new  BusinessRulesException("E-mail already registered.");
+			throw new  BusinessRulesException("E-mail já cadastrado.");
 		}
 		
 		return repository.save(user);
@@ -28,15 +29,29 @@ public class UserService {
 	public User auth(String email, String pass) {
 		Optional<User> user = repository.findByEmail(email);
 		
-		if(!user.isPresent()) {
-			throw new BusinessRulesException("Incorrect email or password");
+		if(!user.isPresent() || !user.get().getPass().equals(pass)) {
+			throw new BusinessRulesException("E-mail e/ou senha incorretos.");
 		}
-		
-		if(!user.get().getPass().equals(pass)) {
-			throw new BusinessRulesException("Incorrect email or password");
-		}
-		
+
 		return user.get();
+	}
+	
+	public Optional<User> getById(Long id) {
+		return repository.findById(id);
+	}
+	
+	public void validate(User user) {
+		if(user.getName() == null || user.getName().isEmpty()) {
+			throw new BusinessRulesException("Por favor informe um nome válido.");
+		}
+		
+		if(user.getEmail() == null || user.getEmail().isEmpty()) {
+			throw new BusinessRulesException("Por favor informe um e-mail válido.");
+		}
+		
+		if(user.getPass() == null || user.getPass().isEmpty()) {
+			throw new BusinessRulesException("Por favor informe uma senha válida.");
+		}
 	}
 
 }
