@@ -42,13 +42,16 @@ public class PostingService {
 		return repository.save(posting);
 	}
 	
+	// Atualiza o status do lançamento
 	public void updateStatus(Posting posting, PostingStatus status) {
-		posting.setStatus(status);
-		update(posting);
+		// TODO
+		// posting.setStatus(status);
+		// update(posting);
 	}
 
 	public void delete(Posting posting) {
-		// TODO 
+		Optional<Posting> postingToDelete = getById(posting.getId());
+		repository.deleteById(postingToDelete.get().getId());
 		
 	}
 	

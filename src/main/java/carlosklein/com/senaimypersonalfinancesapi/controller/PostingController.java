@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,6 +50,7 @@ public class PostingController {
 		}
 	}
 	
+	
 	@GetMapping
 	public ResponseEntity search(
 			@RequestParam(value = "description", required = false) String description,
@@ -76,13 +78,26 @@ public class PostingController {
 		return ResponseEntity.ok(postings);	
 	}
 	
+	
+	@GetMapping("{id}")
+	public ResponseEntity getPostingById(@PathVariable("id") Long id) {
+		Optional<Posting> posting = service.getById(id);
+		if(!posting.isPresent() ) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		} else {
+			PostingDTO recoveredPosting = postingConverter(posting.get());
+			return ResponseEntity.ok(recoveredPosting);
+		}
+	}
+	
+	
 	@PutMapping("{id}")
 	public ResponseEntity update(@PathVariable("id") Long id, @RequestBody PostingDTO dto) {
-		Optional<Posting> recoveredPosting = service.getById(id);
+		Optional<Posting> posting = service.getById(id);
 		
 		try {
 			Posting updatedPosting = dtoConverter(dto);
-			updatedPosting.setId(recoveredPosting.get().getId());
+			updatedPosting.setId(posting.get().getId());
 			service.update(updatedPosting);
 			return ResponseEntity.ok(updatedPosting);
 		} catch (BusinessRulesException e) {
@@ -90,6 +105,41 @@ public class PostingController {
 		}	
 	}
 	
+	
+	@PutMapping("{id}/status")
+	public ResponseEntity updateStatus(@PathVariable("id") Long id, @RequestBody PostingDTO dto) {
+		Optional<Posting> posting = service.getById(id);
+		
+		PostingStatus updatedStatus = PostingStatus.valueOf(dto.getStatus());
+		if(updatedStatus == null) {
+			return ResponseEntity.badRequest().body("Não foi possível atualizar o status do lançamento.");
+		}
+		
+		try {
+			Posting updatedPosting = posting.get();
+			updatedPosting.setStatus(updatedStatus);
+			service.update(updatedPosting);
+			return ResponseEntity.ok(updatedPosting);
+		} catch (BusinessRulesException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
+	
+	
+	@DeleteMapping("{id}")
+	public ResponseEntity delete(@PathVariable("id") Long id) {
+		Optional<Posting> posting = service.getById(id);
+		
+		try {
+			service.delete(posting.get());
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+		} catch (BusinessRulesException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
+	
+	
+	// Converte PostingDTO para Posting
 	private Posting dtoConverter(PostingDTO dto) {
 		Posting posting = new Posting();
 		posting.setId(dto.getId());
@@ -112,4 +162,21 @@ public class PostingController {
 
 		return posting;
 	}
+	
+
+	//Converte Posting para PostingDTO
+	private PostingDTO postingConverter(Posting posting) {
+		return PostingDTO.builder()
+					.id(posting.getId())
+					.description(posting.getDescription())
+					.value(posting.getValue())
+					.year(posting.getYear())
+					.month(posting.getMonth())
+					.user(posting.getUser().getId())
+					.type(posting.getType().name())
+					.status(posting.getStatus().name())
+					.build();
+	}
+	
 }
+
