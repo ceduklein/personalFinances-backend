@@ -26,16 +26,16 @@ public class UserService {
 		return repository.save(user);
 	}
 	
-	public User auth(String email, String pass) {
-		Optional<User> user = repository.findByEmail(email);
-		
-		if(!user.isPresent() || !user.get().getPass().equals(pass)) {
-			throw new BusinessRulesException("E-mail e/ou senha incorretos.");
-		}
-
-		return user.get();
-	}
-	
+//	public User auth(String email, String pass) {
+//		Optional<User> user = repository.findByEmail(email);
+//		
+//		if(!user.isPresent() || !user.get().getPass().equals(pass)) {
+//			throw new BusinessRulesException("E-mail e/ou senha incorretos.");
+//		}
+//
+//		return user.get();
+//	}
+//	
 	public Optional<User> getById(Long id) {
 		return repository.findById(id);
 	}

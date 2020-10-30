@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,6 +41,7 @@ public class PostingController {
 	private UserService userService;
 	
 	@PostMapping
+	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity save(@RequestBody PostingDTO dto) {
 		try {
 			Posting entity = dtoConverter(dto);
@@ -52,6 +54,7 @@ public class PostingController {
 	
 	
 	@GetMapping
+	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity search(
 			@RequestParam(value = "description", required = false) String description,
 			@RequestParam(value = "type", required = false) PostingType type,
@@ -80,6 +83,7 @@ public class PostingController {
 	
 	
 	@GetMapping("{id}")
+	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity getPostingById(@PathVariable("id") Long id) {
 		Optional<Posting> posting = service.getById(id);
 		if(!posting.isPresent() ) {
@@ -92,6 +96,7 @@ public class PostingController {
 	
 	
 	@PutMapping("{id}")
+	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity update(@PathVariable("id") Long id, @RequestBody PostingDTO dto) {
 		Optional<Posting> posting = service.getById(id);
 		
@@ -107,6 +112,7 @@ public class PostingController {
 	
 	
 	@PutMapping("{id}/status")
+	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity updateStatus(@PathVariable("id") Long id, @RequestBody PostingDTO dto) {
 		Optional<Posting> posting = service.getById(id);
 		
@@ -127,6 +133,7 @@ public class PostingController {
 	
 	
 	@DeleteMapping("{id}")
+	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity delete(@PathVariable("id") Long id) {
 		Optional<Posting> posting = service.getById(id);
 		
