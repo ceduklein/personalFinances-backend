@@ -36,7 +36,7 @@ import carlosklein.com.senaimypersonalfinancesapi.service.UserDetailsImpl;
 import carlosklein.com.senaimypersonalfinancesapi.service.UserService;
 
 @Import(WebSecurityConfig.class)
-@CrossOrigin(origins = { "http://localhost:3000", "https://caderninhodigital-app.herokuapp.com" })
+@CrossOrigin(origins = { "http://localhost:3000" })
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
