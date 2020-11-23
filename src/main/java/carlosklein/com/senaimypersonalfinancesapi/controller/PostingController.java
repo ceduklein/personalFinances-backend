@@ -28,7 +28,7 @@ import carlosklein.com.senaimypersonalfinancesapi.service.PostingService;
 import carlosklein.com.senaimypersonalfinancesapi.service.UserService;
 import lombok.RequiredArgsConstructor;
 
-@CrossOrigin(origins = { "http://localhost:3000" })
+@CrossOrigin(origins = { "http://localhost:3000", "https://caderninhodigital-app.herokuapp.com" })
 @RestController
 @RequestMapping("/api/postings")
 @RequiredArgsConstructor

@@ -36,7 +36,7 @@ import carlosklein.com.senaimypersonalfinancesapi.service.UserDetailsImpl;
 import carlosklein.com.senaimypersonalfinancesapi.service.UserService;
 
 @Import(WebSecurityConfig.class)
-@CrossOrigin(origins = { "http://localhost:3000" })
+@CrossOrigin(origins = { "http://localhost:3000", "https://caderninhodigital-app.herokuapp.com" })
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -61,7 +61,7 @@ public class UserController {
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
+    	Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
                         loginRequest.getPass()));
 
