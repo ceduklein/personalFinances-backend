@@ -41,13 +41,6 @@ public class PostingService {
 		validate(posting);
 		return repository.save(posting);
 	}
-	
-	// Atualiza o status do lançamento
-	public void updateStatus(Posting posting, PostingStatus status) {
-		// TODO
-		// posting.setStatus(status);
-		// update(posting);
-	}
 
 	public void delete(Posting posting) {
 		Optional<Posting> postingToDelete = getById(posting.getId());

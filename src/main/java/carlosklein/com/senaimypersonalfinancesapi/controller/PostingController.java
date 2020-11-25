@@ -28,7 +28,6 @@ import carlosklein.com.senaimypersonalfinancesapi.service.PostingService;
 import carlosklein.com.senaimypersonalfinancesapi.service.UserService;
 import lombok.RequiredArgsConstructor;
 
-//@CrossOrigin(origins = { "http://localhost:3000" })
 @RestController
 @RequestMapping("/api/postings")
 @RequiredArgsConstructor

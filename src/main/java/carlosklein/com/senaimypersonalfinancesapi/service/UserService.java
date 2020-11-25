@@ -18,27 +18,24 @@ public class UserService {
 	public User saveUser(User user) {
 		validate(user);
 		boolean verifyEmail = repository.existsByEmail(user.getEmail());
+		boolean verifyUsername = repository.existsByUsername(user.getUsername());
 		
 		if(verifyEmail) {
 			throw new  BusinessRulesException("E-mail já cadastrado.");
 		}
 		
+		if(verifyUsername) {
+			throw new BusinessRulesException("Nome de usuário já cadastrado.");
+		}
+		
 		return repository.save(user);
 	}
 	
-//	public User auth(String email, String pass) {
-//		Optional<User> user = repository.findByEmail(email);
-//		
-//		if(!user.isPresent() || !user.get().getPass().equals(pass)) {
-//			throw new BusinessRulesException("E-mail e/ou senha incorretos.");
-//		}
-//
-//		return user.get();
-//	}
-//	
+	
 	public Optional<User> getById(Long id) {
 		return repository.findById(id);
 	}
+	
 	
 	public void validate(User user) {
 		if(user.getName() == null || user.getName().isEmpty()) {
